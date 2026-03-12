@@ -1,0 +1,61 @@
+text,label
+"I need a refund for my purchase",refund_request
+"Can I get my money back",refund_request
+"I want to return this product and get a refund",refund_request
+"Please process my refund immediately",refund_request
+"The item was defective and I need a refund",refund_request
+"How do I get a refund on my order",refund_request
+"Refund my credit card please",refund_request
+"I was charged twice please refund",refund_request
+"I never received my item I want money back",refund_request
+"Return and refund request for order",refund_request
+"My payment did not go through",payment_issue
+"Payment failed when checking out",payment_issue
+"Credit card was declined",payment_issue
+"I got an error during payment",payment_issue
+"Unable to complete the payment",payment_issue
+"The transaction failed please help",payment_issue
+"Why was my card charged but order not placed",payment_issue
+"Payment is stuck in processing",payment_issue
+"Double charged on my credit card",payment_issue
+"Payment error on checkout page",payment_issue
+"Where is my order",order_status
+"I want to track my package",order_status
+"What is the status of my delivery",order_status
+"When will my order arrive",order_status
+"My package has not arrived yet",order_status
+"Order tracking number not working",order_status
+"How long will shipping take",order_status
+"Is my order shipped yet",order_status
+"I need an update on my delivery",order_status
+"Show me order status",order_status
+"I want to cancel my subscription",cancellation
+"Please cancel my account",cancellation
+"How do I unsubscribe",cancellation
+"Stop charging my card every month",cancellation
+"Cancel my membership immediately",cancellation
+"I no longer want this service",cancellation
+"Deactivate my account please",cancellation
+"End my subscription now",cancellation
+"I want to opt out of the plan",cancellation
+"Remove me from the subscription",cancellation
+"I want to change my email address",account_update
+"Update my shipping address",account_update
+"How do I change my password",account_update
+"I need to update my phone number",account_update
+"Change my billing information",account_update
+"Update my profile name",account_update
+"I moved and need to change my address",account_update
+"How to edit my account details",account_update
+"Change my payment method on file",account_update
+"Update my contact information",account_update
+"I want to talk to a human",escalation
+"Connect me with a real person",escalation
+"This bot is not helpful let me speak to someone",escalation
+"I need to speak with a manager",escalation
+"Transfer me to customer service",escalation
+"I want to file a complaint",escalation
+"Let me talk to a supervisor",escalation
+"I am not satisfied I need human help",escalation
+"Can I speak to a live agent please",escalation
+"Escalate my issue to a person",escalation

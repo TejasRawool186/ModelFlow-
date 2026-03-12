@@ -12,13 +12,54 @@ router.post("/train", async (req, res) => {
     const response = await axios.post(`${ML_SERVICE_URL}/train`, req.body, {
       timeout: 120000,
     });
-    res.json(response.data);
+
+    const result = response.data;
+
+    // Save model to local DB so Playground can find it
+    if (result.model_id) {
+      const { v4: uuidv4 } = require("uuid");
+      const algo = result.algorithm || req.body.algorithm || "logistic_regression";
+      const name = `${algo.replace(/_/g, " ")} — ${new Date().toLocaleDateString()}`;
+
+      try {
+        db.prepare(
+          `INSERT OR REPLACE INTO models (id, name, algorithm, dataset_id, metrics, status) VALUES (?, ?, ?, ?, ?, ?)`
+        ).run(
+          result.model_id,
+          name,
+          algo,
+          req.body.dataset_id || "",
+          JSON.stringify(result.metrics || {}),
+          "completed"
+        );
+      } catch (dbErr) {
+        console.error("Failed to save model to DB:", dbErr.message);
+      }
+    }
+
+    res.json(result);
   } catch (err) {
     if (err.code === "ECONNREFUSED") {
       // Return mock data if ML service isn't running
+      const mockId = `mock_${Date.now()}`;
+      const algo = req.body.algorithm || "logistic_regression";
+
+      // Save mock model to DB too
+      try {
+        db.prepare(
+          `INSERT OR REPLACE INTO models (id, name, algorithm, metrics, status) VALUES (?, ?, ?, ?, ?)`
+        ).run(
+          mockId,
+          `${algo.replace(/_/g, " ")} (demo)`,
+          algo,
+          JSON.stringify({ accuracy: 0.87, precision: 0.85, recall: 0.89, f1_score: 0.87 }),
+          "completed"
+        );
+      } catch {}
+
       res.json({
-        model_id: `mock_${Date.now()}`,
-        algorithm: req.body.algorithm || "logistic_regression",
+        model_id: mockId,
+        algorithm: algo,
         status: "completed",
         metrics: {
           accuracy: 0.87,

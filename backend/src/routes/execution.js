@@ -68,6 +68,28 @@ router.post("/run", async (req, res) => {
   }
 });
 
+// GET /api/execution/recent — Get last N executions
+router.get("/recent", (req, res) => {
+  const limit = parseInt(req.query.limit) || 10;
+  const executions = db
+    .prepare("SELECT * FROM executions ORDER BY started_at DESC LIMIT ?")
+    .all(limit);
+  res.json(
+    executions.map((e) => ({
+      id: e.id,
+      pipelineId: e.pipeline_id,
+      status: e.status,
+      error: e.error,
+      startedAt: e.started_at,
+      completedAt: e.completed_at,
+      resultCount: (() => {
+        try { return JSON.parse(e.results || "[]").length; }
+        catch { return 0; }
+      })(),
+    }))
+  );
+});
+
 // GET /api/execution/:id/status
 router.get("/:id/status", (req, res) => {
   const exec = db
