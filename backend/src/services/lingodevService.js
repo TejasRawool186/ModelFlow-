@@ -1,12 +1,10 @@
-const axios = require("axios");
+const { LingoDotDevEngine } = require('lingo.dev/sdk');
 
-const LINGODEV_API_URL =
-  process.env.LINGODEV_API_URL || "https://api.lingo.dev/v1";
 const LINGODEV_API_KEY = process.env.LINGODEV_API_KEY || "";
 
 const lingodevService = {
   /**
-   * Translate an array of texts into multiple target languages.
+   * Translate an array of texts into multiple target languages using @lingo.dev/sdk
    * Falls back to mock translations if API key is not configured.
    */
   async expandDataset(texts, sourceLanguage, targetLanguages) {
@@ -17,38 +15,49 @@ const lingodevService = {
       return this.mockTranslate(texts, sourceLanguage, targetLanguages);
     }
 
+    const lingoDotDev = new LingoDotDevEngine({
+      apiKey: LINGODEV_API_KEY,
+    });
+    
     const results = [];
 
-    for (const lang of targetLanguages) {
-      try {
-        const response = await axios.post(
-          `${LINGODEV_API_URL}/translate`,
-          {
-            texts,
-            source: sourceLanguage,
-            target: lang,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${LINGODEV_API_KEY}`,
-              "Content-Type": "application/json",
-            },
-            timeout: 30000,
-          }
-        );
+    try {
+      for (const lang of targetLanguages) {
+        try {
+          console.log(`[LingodevService] Translating ${texts.length} texts to ${lang}...`);
+          
+          // LingoDev SDK localizeObject expects a dictionary/record, not an array.
+          // Map array into a dictionary representation: { "0": "text", "1": "text" }
+          const textsDict = {};
+          texts.forEach((text, i) => { textsDict[i] = text; });
 
-        results.push({
-          language: lang,
-          translations: response.data.translations || response.data,
-        });
-      } catch (err) {
-        console.error(`Failed to translate to ${lang}:`, err.message);
-        results.push({
-          language: lang,
-          translations: texts.map((t) => `[${lang}] ${t}`),
-          error: err.message,
-        });
+          const translatedDict = await lingoDotDev.localizeObject(
+            textsDict, 
+            {
+              sourceLocale: sourceLanguage,
+              targetLocale: lang,
+              fast: true, // Prioritize speed 
+            }
+          );
+
+          // Convert the translated dictionary back into an ordered array
+          const translatedTexts = texts.map((_, i) => translatedDict[i]);
+          
+          results.push({
+            language: lang,
+            translations: translatedTexts,
+          });
+        } catch (err) {
+          console.error(`Failed to translate to ${lang}:`, err.message);
+          results.push({
+            language: lang,
+            translations: texts.map((t) => `[${lang}] ${t}`),
+            error: err.message,
+          });
+        }
       }
+    } catch (err) {
+      console.error('Fatal Lingo.dev error:', err);
     }
 
     return results;

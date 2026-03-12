@@ -294,19 +294,40 @@ async function executeValidationNode(config, inputs) {
 }
 
 async function executeLangNode(config, inputs) {
-  const texts = inputs.texts || inputs.rows?.map((r) => r[inputs.textColumn]) || ["sample text"];
+  const texts = inputs.texts || inputs.rows?.map((r) => r[inputs.textColumn]) || [];
+  const labels = inputs.labels || inputs.rows?.map((r) => r[inputs.labelColumn]) || [];
+  
+  if (texts.length === 0) {
+    throw new Error("No texts found to translate. Connect a Preprocessing or Dataset node first.");
+  }
+
   const result = await lingodevService.expandDataset(
     texts,
     config.sourceLanguage || "en",
     config.languages || ["hi", "es"]
   );
+
+  // Append translations to the original dataset
+  const expandedTexts = [...texts];
+  const expandedLabels = [...labels];
+
+  result.forEach((langData) => {
+    if (langData.translations && !langData.error) {
+      // Assuming translations array matches the length of the original texts
+      langData.translations.forEach((translatedText, i) => {
+        expandedTexts.push(translatedText);
+        expandedLabels.push(labels[i]); // copy the label for the translated text
+      });
+    }
+  });
+
   return {
-    data: { texts, translations: result },
-    // Pass through
-    texts: inputs.texts,
-    labels: inputs.labels,
+    data: { originalTexts: texts, translations: result },
+    texts: expandedTexts,
+    labels: expandedLabels,
     textColumn: inputs.textColumn,
     labelColumn: inputs.labelColumn,
+    translations: result
   };
 }
 

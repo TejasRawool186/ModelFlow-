@@ -8,7 +8,7 @@ import numpy as np
 _model_cache = {}
 
 
-def get_model(model_name="all-MiniLM-L6-v2"):
+def get_model(model_name="paraphrase-multilingual-MiniLM-L12-v2"):
     """Get or load a sentence-transformers model."""
     if model_name not in _model_cache:
         try:
@@ -20,7 +20,7 @@ def get_model(model_name="all-MiniLM-L6-v2"):
     return _model_cache[model_name]
 
 
-def generate_embeddings(texts, model_name="all-MiniLM-L6-v2"):
+def generate_embeddings(texts, model_name="paraphrase-multilingual-MiniLM-L12-v2"):
     """
     Generate embeddings for a list of texts.
     Falls back to random embeddings if sentence-transformers isn't available.
