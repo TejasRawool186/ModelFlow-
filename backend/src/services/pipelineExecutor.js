@@ -69,7 +69,7 @@ async function executeNode(node, inputs, context) {
       return await executeValidationNode(config, inputs);
 
     case "training":
-      return await executeTrainingNode(config, inputs);
+      return await executeTrainingNode(config, inputs, context);
 
     case "evaluation":
       return await executeEvaluationNode(config, inputs);
@@ -397,7 +397,7 @@ async function executeEmbeddingNode(config, inputs) {
 /**
  * Training node — sends real data to ML service and saves model to backend DB
  */
-async function executeTrainingNode(config, inputs) {
+async function executeTrainingNode(config, inputs, context = {}) {
   const texts = inputs.texts || [];
   const labels = inputs.labels || [];
   const embeddings = inputs.embeddings || null;
@@ -428,8 +428,6 @@ async function executeTrainingNode(config, inputs) {
       payload.labels = labels;
     }
 
-    require('fs').writeFileSync('D:/ModelFlow/last_train_payload.json', JSON.stringify(payload, null, 2));
-
     console.log(`[Executor] Training ${algorithm} model with ${texts.length || embeddings?.length} samples...`);
 
     const res = await axios.post(`${ML_SERVICE_URL}/train`, payload, {
@@ -440,7 +438,14 @@ async function executeTrainingNode(config, inputs) {
 
     // Save model to backend DB so Playground can find it
     if (result.model_id) {
-      const modelName = `${algorithm.replace(/_/g, " ")} — ${new Date().toLocaleDateString()}`;
+      // Build model name from pipeline name + run number
+      const pipelineName = context.pipelineName || "Untitled Pipeline";
+      const existingModels = db.prepare(
+        "SELECT name FROM models WHERE name LIKE ?"
+      ).all(`${pipelineName}%`);
+      const runNumber = existingModels.length + 1;
+      const modelName = runNumber === 1 ? pipelineName : `${pipelineName} #${runNumber}`;
+      
       const isMultilingual = payload.embedding_model === "paraphrase-multilingual-MiniLM-L12-v2" ? 1 : 0;
       
       try {

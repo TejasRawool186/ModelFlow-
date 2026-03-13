@@ -216,4 +216,26 @@ router.get("/models", (req, res) => {
   );
 });
 
+// DELETE /api/ml/models/:id — Delete a trained model
+router.delete("/models/:id", async (req, res) => {
+  const modelId = req.params.id;
+  
+  // Delete from local DB
+  const result = db.prepare("DELETE FROM models WHERE id = ?").run(modelId);
+  if (result.changes === 0) {
+    return res.status(404).json({ message: "Model not found" });
+  }
+
+  // Also try to delete from ML service (best-effort)
+  try {
+    await axios.delete(`${ML_SERVICE_URL}/models/${modelId}`, { timeout: 5000 });
+  } catch {
+    // ML service might not support delete or model file might already be gone — that's fine
+    console.log(`[ML Route] Could not delete model ${modelId} from ML service (non-critical)`);
+  }
+
+  console.log(`[ML Route] Deleted model: ${modelId}`);
+  res.json({ message: "Model deleted", id: modelId });
+});
+
 module.exports = router;

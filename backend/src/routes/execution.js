@@ -27,6 +27,13 @@ router.post("/run", async (req, res) => {
     return res.status(400).json({ message: "Pipeline has no nodes" });
   }
 
+  // Get pipeline name for model naming
+  let pipelineName = "Untitled Pipeline";
+  if (pipelineId) {
+    const pipelineRecord = db.prepare("SELECT name FROM pipelines WHERE id = ?").get(pipelineId);
+    if (pipelineRecord) pipelineName = pipelineRecord.name;
+  }
+
   const executionId = uuidv4();
 
   // Create execution record
@@ -37,7 +44,8 @@ router.post("/run", async (req, res) => {
   try {
     const results = await pipelineExecutor.execute(
       pipelineNodes,
-      pipelineEdges
+      pipelineEdges,
+      { pipelineName }
     );
 
     const hasError = results.some((r) => r.status === "error");
