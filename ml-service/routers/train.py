@@ -33,15 +33,18 @@ class EmbedRequest(BaseModel):
 def train_endpoint(req: TrainRequest):
     """Train a model from texts + labels or pre-computed embeddings."""
     try:
+        texts = req.texts
+        labels = req.labels
+        
         # If raw texts provided, generate embeddings first
-        if req.texts and req.labels:
-            if len(req.texts) != len(req.labels):
+        if texts is not None and labels is not None:
+            if len(texts) != len(labels):
                 raise HTTPException(
                     status_code=400,
                     detail="texts and labels must have the same length",
                 )
-            embeddings = generate_embeddings(req.texts, req.embedding_model)
-        elif req.embeddings and req.labels:
+            embeddings = generate_embeddings(texts, req.embedding_model)
+        elif req.embeddings is not None and labels is not None:
             embeddings = req.embeddings
         else:
             # Demo mode with sample data

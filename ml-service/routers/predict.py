@@ -48,14 +48,14 @@ def predict_endpoint(req: PredictRequest):
                 prob = float(proba[idx])
                 if prob > 0:
                     label = le.inverse_transform([idx])[0]
-                    probabilities.append({"label": str(label), "confidence": round(prob, 4)})
+                    probabilities.append({"label": str(label), "confidence": float(f"{prob:.4f}")})
         elif hasattr(model, "decision_function"):
             confidence = float(min(abs(model.decision_function(embedding)[0]), 1.0))
-            probabilities = [{"label": str(prediction_label), "confidence": round(confidence, 4)}]
+            probabilities = [{"label": str(prediction_label), "confidence": float(f"{confidence:.4f}")}]
 
         return {
             "prediction": str(prediction_label),
-            "confidence": round(confidence, 4),
+            "confidence": float(f"{confidence:.4f}"),
             "probabilities": probabilities,
             "model_id": req.model_id,
             "text": req.text,

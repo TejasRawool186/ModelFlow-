@@ -20,6 +20,8 @@ def export_model(model_id, model_path, format_type="python_package"):
         return _export_python_package(model_id, model_path, export_dir)
     elif format_type == "rest_api":
         return _export_rest_api(model_id, model_path, export_dir)
+    elif format_type == "pickle":
+        return _export_pickle(model_id, model_path, export_dir)
     else:
         raise ValueError(f"Unsupported export format: {format_type}")
 
@@ -171,4 +173,22 @@ if __name__ == "__main__":
         "zip_path": zip_path,
         "files": files,
         "format": "rest_api",
+    }
+
+def _export_pickle(model_id, model_path, export_dir):
+    """Generate a direct pickle file export."""
+    files = []
+
+    # Copy model
+    import shutil
+    model_dest = os.path.join(export_dir, f"{model_id}.pkl")
+    if os.path.exists(model_path):
+        shutil.copy2(model_path, model_dest)
+    files.append(os.path.basename(model_dest))
+
+    return {
+        "export_dir": export_dir,
+        "zip_path": model_dest,
+        "files": files,
+        "format": "pickle",
     }

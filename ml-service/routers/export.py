@@ -51,7 +51,8 @@ def export_endpoint(req: ExportRequest):
 
 @router.get("/export/download")
 def download_export(path: str):
-    """Download the generated export zip file."""
+    """Download the generated export zip/pkl file."""
     if not os.path.exists(path):
         raise HTTPException(status_code=404, detail="File not found")
-    return FileResponse(path, media_type="application/zip", filename=os.path.basename(path))
+    media_type = "application/zip" if path.endswith('.zip') else "application/octet-stream"
+    return FileResponse(path, media_type=media_type, filename=os.path.basename(path))
