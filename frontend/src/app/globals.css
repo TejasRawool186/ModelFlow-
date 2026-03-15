@@ -1,0 +1,484 @@
+@import "tailwindcss";
+
+/* ============================================
+   ModelFlow Design System — BAUHAUS EDITION
+   Inspired by the Bauhaus school of design (1919)
+   - Primary colors: Red, Yellow, Blue
+   - Geometric shapes: Circle, Square, Triangle
+   - Clean sans-serif typography (Inter)
+   - Strong grid systems, minimal ornamentation
+   - Functionalism: every element serves a purpose
+   ============================================ */
+
+/* ---------- Bauhaus Color Tokens ---------- */
+:root {
+  /* Bauhaus Primary Triad */
+  --bauhaus-red: #E63946;
+  --bauhaus-yellow: #FFB703;
+  --bauhaus-blue: #1D4ED8;
+
+  /* Bauhaus Neutrals */
+  --bauhaus-black: #1A1A1A;
+  --bauhaus-white: #FAFAF8;
+  --bauhaus-warm-gray: #F0EDE8;
+  --bauhaus-mid-gray: #B0ADA6;
+
+  /* Primary: Bauhaus Blue — structure, technology, trust */
+  --primary-h: 224;
+  --primary-s: 76%;
+  --primary-l: 48%;
+  --primary: var(--bauhaus-blue);
+  --primary-hover: #1E40AF;
+  --primary-light: #EFF6FF;
+  --primary-foreground: #FFFFFF;
+
+  /* Accent: Bauhaus Red — energy, action, emphasis */
+  --accent: var(--bauhaus-red);
+  --accent-hover: #C1121F;
+  --accent-light: #FEF2F2;
+
+  /* Neutrals */
+  --background: var(--bauhaus-white);
+  --foreground: var(--bauhaus-black);
+  --muted: var(--bauhaus-warm-gray);
+  --muted-foreground: #6B6966;
+  --border: #E0DDD6;
+  --border-strong: #C8C4BC;
+  --card: #FFFFFF;
+  --card-foreground: var(--bauhaus-black);
+
+  /* Functional */
+  --success: #16A34A;
+  --success-light: #F0FDF4;
+  --warning: var(--bauhaus-yellow);
+  --warning-light: #FFFBEB;
+  --danger: var(--bauhaus-red);
+  --danger-light: #FEF2F2;
+  --info: var(--bauhaus-blue);
+  --info-light: #EFF6FF;
+
+  /* Shadows — minimal, geometric */
+  --shadow-sm: 0 1px 2px rgba(26, 26, 26, 0.06);
+  --shadow-md: 0 4px 12px rgba(26, 26, 26, 0.08);
+  --shadow-lg: 0 8px 24px rgba(26, 26, 26, 0.12);
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-smooth: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Layout */
+  --sidebar-width: 260px;
+  --header-height: 56px;
+
+  /* Bauhaus Geometry: Sharp corners, no unnecessary rounding */
+  --radius-sm: 0px;
+  --radius-md: 2px;
+  --radius-lg: 4px;
+}
+
+/* ---------- Tailwind Theme Inline ---------- */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-light: var(--primary-light);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-light: var(--accent-light);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-success: var(--success);
+  --color-success-light: var(--success-light);
+  --color-warning: var(--warning);
+  --color-warning-light: var(--warning-light);
+  --color-danger: var(--danger);
+  --color-danger-light: var(--danger-light);
+  --color-info: var(--info);
+  --color-info-light: var(--info-light);
+  --color-bauhaus-red: var(--bauhaus-red);
+  --color-bauhaus-yellow: var(--bauhaus-yellow);
+  --color-bauhaus-blue: var(--bauhaus-blue);
+  --color-bauhaus-black: var(--bauhaus-black);
+  --color-bauhaus-white: var(--bauhaus-white);
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "SF Mono", "Cascadia Code", "Fira Code", monospace;
+}
+
+/* ---------- Base Styles ---------- */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ---------- Bauhaus Typography ---------- */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--foreground);
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: 2.5rem; font-weight: 900; letter-spacing: -0.03em; }
+h2 { font-size: 1.5rem; font-weight: 700; }
+h3 { font-size: 1.125rem; font-weight: 600; }
+
+/* ---------- Bauhaus Animations ---------- */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slide-in-left {
+  from { opacity: 0; transform: translateX(-16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes float-geometric {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(3deg); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes draw-line {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes rotate-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-fade-in {
+  animation: fade-in var(--transition-smooth) ease both;
+}
+
+.animate-slide-in {
+  animation: slide-in-right var(--transition-smooth) ease both;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.animate-float {
+  animation: float-geometric 4s ease-in-out infinite;
+}
+
+/* ---------- Bauhaus Geometric Shapes ---------- */
+.bauhaus-circle {
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.bauhaus-square {
+  border-radius: 0;
+  display: inline-block;
+}
+
+.bauhaus-triangle {
+  width: 0;
+  height: 0;
+  border-left: var(--tri-size, 30px) solid transparent;
+  border-right: var(--tri-size, 30px) solid transparent;
+  border-bottom: calc(var(--tri-size, 30px) * 1.732) solid var(--tri-color, var(--bauhaus-yellow));
+  display: inline-block;
+}
+
+.bauhaus-semicircle {
+  border-radius: 9999px 9999px 0 0;
+  display: inline-block;
+}
+
+/* ---------- Bauhaus Decorative Strip ---------- */
+.bauhaus-strip {
+  display: flex;
+  gap: 0;
+  height: 4px;
+}
+
+.bauhaus-strip > span:nth-child(1) {
+  flex: 1;
+  background: var(--bauhaus-red);
+}
+
+.bauhaus-strip > span:nth-child(2) {
+  flex: 1;
+  background: var(--bauhaus-yellow);
+}
+
+.bauhaus-strip > span:nth-child(3) {
+  flex: 1;
+  background: var(--bauhaus-blue);
+}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+}
+
+/* ---------- React Flow Overrides ---------- */
+.react-flow__node {
+  font-family: var(--font-sans) !important;
+}
+
+.react-flow__attribution {
+  display: none !important;
+}
+
+.react-flow__edge-path {
+  stroke: var(--border-strong) !important;
+  stroke-width: 2 !important;
+}
+
+.react-flow__handle {
+  width: 10px !important;
+  height: 10px !important;
+  border: 2px solid var(--primary) !important;
+  background: var(--background) !important;
+  border-radius: 0 !important;
+}
+
+.react-flow__handle:hover {
+  background: var(--primary) !important;
+}
+
+/* ---------- Utility Classes — Bauhaus Cards ---------- */
+.card {
+  background: var(--card);
+  border: 2px solid var(--bauhaus-black);
+  border-radius: var(--radius-sm);
+  box-shadow: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  box-shadow: 4px 4px 0 var(--bauhaus-black);
+  transform: translate(-2px, -2px);
+  transition: all var(--transition-fast);
+}
+
+/* ---------- Buttons — Bauhaus Style ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 0;
+  border: 2px solid var(--bauhaus-black);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  line-height: 1.4;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--primary-hover);
+  box-shadow: 3px 3px 0 var(--bauhaus-black);
+  transform: translate(-1px, -1px);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--bauhaus-black);
+  border: 2px solid var(--bauhaus-black);
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: var(--bauhaus-black);
+  color: var(--bauhaus-white);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--foreground);
+  border: none;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: var(--muted);
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: white;
+  border-color: var(--danger);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: var(--accent-hover);
+  box-shadow: 3px 3px 0 var(--bauhaus-black);
+  transform: translate(-1px, -1px);
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.btn-lg {
+  padding: 12px 24px;
+  font-size: 16px;
+}
+
+/* ---------- Inputs — Bauhaus ---------- */
+.input {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 14px;
+  border: 2px solid var(--bauhaus-black);
+  border-radius: 0;
+  background: var(--background);
+  color: var(--foreground);
+  transition: border-color var(--transition-fast);
+  outline: none;
+  font-family: var(--font-sans);
+}
+
+.input:focus {
+  border-color: var(--primary);
+  box-shadow: 3px 3px 0 var(--primary);
+}
+
+.input::placeholder {
+  color: var(--muted-foreground);
+}
+
+.label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--foreground);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ---------- Badges — Bauhaus ---------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 0;
+  line-height: 1.5;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid currentColor;
+}
+
+.badge-primary {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.badge-success {
+  background: var(--success-light);
+  color: var(--success);
+}
+
+.badge-warning {
+  background: var(--warning-light);
+  color: #92400E;
+}
+
+.badge-danger {
+  background: var(--danger-light);
+  color: var(--danger);
+}
+
+/* ---------- Bauhaus Grid Helper ---------- */
+.bauhaus-grid {
+  display: grid;
+  gap: 0;
+}
+
+/* ---------- Bauhaus Accent Bar ---------- */
+.bauhaus-accent-bar {
+  width: 40px;
+  height: 4px;
+  background: var(--bauhaus-red);
+  display: block;
+}
+
+.bauhaus-accent-bar--blue {
+  background: var(--bauhaus-blue);
+}
+
+.bauhaus-accent-bar--yellow {
+  background: var(--bauhaus-yellow);
+}
+
+/* ---------- Reduced Motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
